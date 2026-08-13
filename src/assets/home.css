@@ -1,0 +1,176 @@
+.home-page {
+  min-height: 100vh;
+  background: #09090b;
+  color: white;
+}
+
+/* Navbar */
+
+.home-navbar {
+  height: 70px;
+  padding: 0 8%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-bottom: 1px solid #27272a;
+  background: #111113;
+}
+
+.brand {
+  font-size: 25px;
+  font-weight: 700;
+}
+
+.brand span {
+  color: white;
+}
+
+.brand {
+  color: #a51f49;
+}
+
+.nav-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.nav-actions button {
+  border: none;
+  background: transparent;
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+}
+
+/* Feed */
+
+.feed-container {
+  width: 100%;
+  max-width: 650px;
+  margin: 0 auto;
+  padding: 30px 20px;
+}
+
+.feed-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 25px;
+}
+
+.feed-header h2 {
+  margin: 0;
+}
+
+.create-post-btn {
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+
+  background: #a51f49;
+  color: white;
+
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.create-post-btn:hover {
+  opacity: 0.9;
+}
+
+/* Post */
+
+.posts-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.post-card {
+  background: #18181b;
+  border: 1px solid #29292d;
+  border-radius: 14px;
+  padding: 18px;
+}
+
+/* User */
+
+.post-user {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.profile-avatar {
+  width: 42px;
+  height: 42px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #a51f49;
+  font-weight: bold;
+}
+
+.post-user h4 {
+  margin: 0;
+  font-size: 15px;
+}
+
+.post-user span {
+  color: #8f8f96;
+  font-size: 13px;
+}
+
+/* Caption */
+
+.post-caption {
+  margin: 16px 0;
+  color: #e5e5e7;
+}
+
+/* Image */
+
+.post-image {
+  width: 100%;
+  height: 350px;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+}
+
+/* Actions */
+
+.post-actions {
+  display: flex;
+  gap: 20px;
+
+  margin-top: 14px;
+}
+
+.post-actions button {
+  border: none;
+  background: transparent;
+
+  color: #d4d4d8;
+
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.post-actions button:hover {
+  color: white;
+}
+
+.post-actions .liked {
+  color: #ff3b6b;
+}
+
+.share-button {
+  margin-left: auto;
+}
