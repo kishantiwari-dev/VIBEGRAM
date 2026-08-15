@@ -1,13 +1,15 @@
 import React, { useState } from 'react';
 import { LockAnimation } from '../components/LockAnimation';
-import { loginUser } from '../services/auth';
+import { registerUser } from '../services/auth';
 
-export function Login({ onLogin, onGoToRegister }) {
-  const [identifier, setIdentifier] = useState('');
+export function Register({ onLogin, onGoToLogin }) {
+  const [name, setName] = useState('');
+  const [username, setUsername] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [status, setStatus] = useState('idle'); // idle | loading | success | error
   const [errorMessage, setErrorMessage] = useState('');
-  const [showPassword, setShowPassword] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -17,28 +19,19 @@ export function Login({ onLogin, onGoToRegister }) {
     setStatus('loading');
 
     try {
-      const userData = await loginUser(identifier, password);
+      const userData = await registerUser(name, username, email, password);
       setStatus('success');
 
-      // Give the lock animation time to play, then notify App.jsx
+      // Give the lock time to animate open before transitioning
       setTimeout(() => {
         onLogin(userData);
       }, 900);
     } catch (err) {
       setStatus('error');
-      if (err.code === 'NETWORK_ERROR') {
-        setErrorMessage('Unable to connect to VibeGram server. Please try again.');
-      } else if (err.status === 401) {
-        setErrorMessage('Invalid username/email or password.');
-      } else if (err.status >= 500) {
-        setErrorMessage('VibeGram server is unavailable. Please try again.');
-      } else {
-        setErrorMessage(err.message || 'Please check your details and try again.');
-      }
+      setErrorMessage(err.message || 'Registration failed. Please try again.');
       setTimeout(() => setStatus('idle'), 1800);
     }
   };
-
 
   return (
     <div className="w-full max-w-md mx-auto flex flex-col items-center">
@@ -56,20 +49,18 @@ export function Login({ onLogin, onGoToRegister }) {
       {/* Headline */}
       <div className="text-center mt-2 mb-6">
         <h1 className="text-2xl font-bold text-white tracking-tight mb-1">
-          Find your people.
+          Join VibeGram.
         </h1>
 
         <p className="text-xs text-zinc-400 max-w-xs mx-auto leading-relaxed">
-          VibeGram learns from what you enjoy and helps you discover people who resonate with you.
+          Create your account and start discovering people on your wavelength.
         </p>
       </div>
 
-      {/* Login Form */}
+      {/* Register Form */}
       <div
         className={`w-full p-6 bg-zinc-900/90 border border-zinc-800 rounded-2xl shadow-xl ${
-          status === 'error'
-            ? 'animate-error-shake border-rose-900/60'
-            : ''
+          status === 'error' ? 'animate-error-shake border-rose-900/60' : ''
         }`}
       >
 
@@ -80,24 +71,51 @@ export function Login({ onLogin, onGoToRegister }) {
           </div>
         )}
 
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-4"
-          noValidate
-        >
+        <form onSubmit={handleSubmit} className="space-y-4" noValidate>
+
+          {/* Name */}
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+              Full name
+            </label>
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              disabled={status === 'loading'}
+              placeholder="Kishan Tiwari"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs sm:text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-[#8B1E3F] transition-colors"
+              required
+            />
+          </div>
 
           {/* Username */}
           <div>
             <label className="block text-xs font-medium text-zinc-300 mb-1.5">
-              Email or username
+              Username
             </label>
-
             <input
               type="text"
-              value={identifier}
-              onChange={(e) => setIdentifier(e.target.value)}
+              value={username}
+              onChange={(e) => setUsername(e.target.value)}
               disabled={status === 'loading'}
-              placeholder="email or username"
+              placeholder="kishan"
+              className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs sm:text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-[#8B1E3F] transition-colors"
+              required
+            />
+          </div>
+
+          {/* Email */}
+          <div>
+            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+              Email
+            </label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              disabled={status === 'loading'}
+              placeholder="kishan@example.com"
               className="w-full px-3.5 py-2.5 bg-zinc-950 border border-zinc-800 rounded-lg text-xs sm:text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-[#8B1E3F] transition-colors"
               required
             />
@@ -105,34 +123,19 @@ export function Login({ onLogin, onGoToRegister }) {
 
           {/* Password */}
           <div>
-
-            <div className="flex items-center justify-between mb-1.5">
-
-              <label className="block text-xs font-medium text-zinc-300">
-                Password
-              </label>
-
-              <a
-                href="#forgot"
-                className="text-xs text-zinc-400 hover:text-zinc-200 transition-colors"
-              >
-                Forgot password?
-              </a>
-
-            </div>
-
+            <label className="block text-xs font-medium text-zinc-300 mb-1.5">
+              Password
+            </label>
             <div className="relative">
-
               <input
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 disabled={status === 'loading'}
-                placeholder="1234"
+                placeholder="At least 6 characters"
                 className="w-full px-3.5 py-2.5 pr-12 bg-zinc-950 border border-zinc-800 rounded-lg text-xs sm:text-sm text-zinc-100 placeholder-zinc-600 focus:outline-none focus:border-[#8B1E3F] transition-colors"
                 required
               />
-
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
@@ -140,40 +143,34 @@ export function Login({ onLogin, onGoToRegister }) {
               >
                 {showPassword ? 'Hide' : 'Show'}
               </button>
-
             </div>
           </div>
 
-          {/* Sign In Button */}
+          {/* Create Account Button */}
           <button
             type="submit"
             disabled={status === 'loading'}
             className="w-full py-2.5 px-4 bg-[#8B1E3F] hover:bg-[#a3254d] text-white text-xs sm:text-sm font-medium rounded-lg transition-colors disabled:opacity-50 mt-2"
           >
-            {status === 'loading'
-              ? 'Signing in...'
-              : 'Sign in'}
+            {status === 'loading' ? 'Creating account...' : 'Create account'}
           </button>
 
         </form>
 
-        {/* Create Account */}
+        {/* Back to Login */}
         <div className="mt-5 text-center text-xs text-zinc-400 pt-4 border-t border-zinc-800/80">
-
-          Don't have an account?{' '}
+          Already have an account?{' '}
 
           <button
             type="button"
-            onClick={onGoToRegister}
+            onClick={onGoToLogin}
             className="text-[#a3254d] hover:text-rose-300 font-medium"
           >
-            Create account
+            Sign in
           </button>
-
         </div>
 
       </div>
-
     </div>
   );
 }
